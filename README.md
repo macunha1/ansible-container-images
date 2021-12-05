@@ -13,20 +13,24 @@
 
 ## Summary
 
-Repository name in Docker Hub: **[macunha1/ansible](https://hub.docker.com/r/macunha1/ansible/)**
+Repository name in Docker Hub:
+**[macunha1/ansible](https://hub.docker.com/r/macunha1/ansible/)**
 
-This repository contains Dockerized [Ansible](https://github.com/ansible/ansible), i.e. docker images for creating containers with Ansible installed.
-Images are published to the public [Docker Hub](https://hub.docker.com/) via **automated build** mechanism (builds run on Docker Hub infrastructure).
+This repository contains Dockerized (i.e. inside a container image)
+[Ansible](https://github.com/ansible/ansible).
+
+Images are automated built and then published to a public repository on [Docker Hub](https://hub.docker.com/).
 
 ### Base OS
 
-Debian: 8 (jessie), 9 (stretch), 10 (buster).
+By default the following Linux distros are implemented. However, any future
+(version) release of any one of the supported distro can be easily added in the
+[config](config.yaml) to render a new Dockerfile.
 
-Ubuntu: 14.04, 16.04, 18.04, 20.04. Only LTS versions.
-
-CentOS 6 and 7
-
-Alpine 3.8, 3.9, 3.10, 3.11
+- Debian: 8 (jessie), 9 (stretch), 10 (buster);
+- Ubuntu: 14.04, 16.04, 18.04, 20.04. Only LTS versions by default;
+- CentOS 6 and 7;
+- Alpine 3.8, 3.9, 3.10, 3.11
 
 *Pending:* OpenSUSE and Fedora.
 
@@ -35,8 +39,8 @@ Alpine 3.8, 3.9, 3.10, 3.11
 Ansible will be installed with the version specified on [config](config.yaml).
 All Docker images had Ansible installed through `pip`.
 
-To make sure the right version of Ansible is installed on container during execution of
-tests, run a `pip install ansible==$DESIRED_VERSION`.
+To make sure the right version of Ansible is installed on container during
+execution of tests, run a `pip install ansible==$DESIRED_VERSION`.
 
 ## For the impatient
 
@@ -74,24 +78,41 @@ docker run -it --name awesome-ansible-container \
 
 ## Why yet another Ansible image for Docker?
 
-There has been quite a few Ansible images for Docker (e.g., [search](https://hub.docker.com/search/?isAutomated=1&isOfficial=0&page=1&pullCount=0&q=ansible&starCount=0) in the Docker Hub), so why reinvent the wheel?
+There has been quite a few Ansible images for Docker (e.g.,
+[search](https://hub.docker.com/search/?isAutomated=1&isOfficial=0&page=1&pullCount=0&q=ansible&starCount=0)
+in the Docker Hub), so why reinvent the wheel?
 
-Simply, because most of them seems to be abadoned. Even the base of this fork [from William Yeh](https://github.com/William-Yeh/docker-ansible)
+Simply, because most of them seems to be abadoned. Even the base of this fork
+[from William Yeh](https://github.com/William-Yeh/docker-ansible)
 
 ### Motivation
 
 This repository was first created to give [Confluent Kafka role](https://app.circleci.com/pipelines/github/macunha1/confluent-kafka-role?branch=feature%2Fversion-update)
-a proper test suite. Previously, public images gave me a lot of issues, and I got tired of making workarounds to have a CI working for my roles.
+a proper test suite. Previously, public images gave me a lot of issues, and I
+got tired of making workarounds to have a CI working for my roles.
 
-If you're tired too of looking around and not finding what you need, join me and
-use these Docker images. Feel free to open issues and send PR, I will be happy to colaborate.
+If you're tired too of looking around and not finding what you need, join me
+and use these Docker images. Feel free to open issues and send PR, I will be
+happy to colaborate.
 
 ## Use cases
 
-With Docker, we can test any Ansible playbook against any version of any Linux distribution without the help of Vagrant. More lightweight, and more portable across IaaS providers.
+With Docker, we can test any Ansible playbook against any version of any Linux
+distribution without the help of Vagrant. More lightweight, and more portable
+across IaaS providers.
 
-If better OS emulation (virtualization) isn't required, the Docker approach (containerization) should give you a more quicker setup to test your Ansible playbooks.
+If better OS emulation (virtualization) isn't required, the Docker approach
+(containerization) should give you a more quicker setup to test your Ansible
+playbooks.
 
-## License
 
-Unlicensed under the [UNLICENSE](UNLICENSE). See [the Unlicense.org](https://unlicense.org/) for details.
+## Contribute
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+Feel free to fill [an issue](https://github.com/macunha1/ansible-github-actions-runner/issues)
+containing feature request(s), or (even better) to send me a Pull request, I
+would be happy to collaborate with you.
+
+If this role didn't work for you, or if you found some bug during the execution,
+let me know.

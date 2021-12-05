@@ -4,14 +4,19 @@ RUN apk --update --no-cache add sudo \
         openssl ca-certificates bash \
         tar gzip iproute2 \
         libffi-dev openssl-dev build-base \
-        python-dev python py-pip \
+        python3-dev python3 py3-pip \
         openjdk8-jre-base \
         openssh-client rsync sshpass
 
 # Python configuration layer
-RUN EASY_INSTALL=$(command -v easy_install || \
-        echo "$(which pip) install") && \
-    $EASY_INSTALL -U pip && \
+RUN [ -f "$(dirname $(which python3))/python" ] || \
+    # If there's no python installed on the default path, use python3
+    ln -s $(which python3) $(dirname $(which python3))/python && \
+    ln -s $(which python3) /usr/local/bin/python && \
+    pip3 install -U pip && \
+    command -v pip >/dev/null || \
+    # Same fallback for pip. No pip on default path == use pip3
+    ln -s $(which pip3) $(dirname $(which pip3))/pip && \
     pip install -U setuptools pyopenssl && \
     pip install -U --ignore-installed cffi pywinrm && \
     pip install ansible==2.9.6 && \

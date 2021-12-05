@@ -7,12 +7,10 @@ defaults:
     versions:
       - 3.11.5
       - 3.10.4
-      - 3.9.5
-      - 3.8.5
     java:
       enabled: false
     python3:
-      enabled: false
+      enabled: true
   debian: &debianDefaults
     versions:
       - 8
@@ -21,7 +19,7 @@ defaults:
     java:
       enabled: false
     python3:
-      enabled: false
+      enabled: true
   ubuntu: &ubuntuDefaults
     versions:
       - 16.04
@@ -29,18 +27,12 @@ defaults:
     java:
       enabled: false
     python3:
-      enabled: false
+      enabled: true
 
 distros:
-  # Python 2 images
   alpine:
-    py2:
-      template: alpine
-      <<: *alpineDefaults
     py3:
       template: alpine
-      python3:
-        enabled: true
       <<: *alpineDefaults
     java:
       template: alpine
@@ -49,13 +41,8 @@ distros:
       <<: *alpineDefaults
 
   debian:
-    py2:
-      template: debian
-      <<: *debianDefaults
     py3:
       template: debian
-      python3:
-        enabled: true
       <<: *debianDefaults
       versions:
         - 9
@@ -67,14 +54,9 @@ distros:
       <<: *debianDefaults
 
   ubuntu:
-    py2:
-      template: debian
-      <<: *ubuntuDefaults
     py3:
       template: debian
       <<: *ubuntuDefaults
-      python3:
-        enabled: true
       versions:
         - 16.04
         - 18.04
@@ -83,8 +65,6 @@ distros:
       template: debian
       <<: *ubuntuDefaults
       java:
-        enabled: true
-      python3:
         enabled: true
       versions:
         - 16.04

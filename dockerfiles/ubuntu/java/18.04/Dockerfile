@@ -3,7 +3,7 @@ FROM "ubuntu:18.04"
 RUN apt-get update -y && \
     apt-get install --fix-missing && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        sudo curl gcc libffi-dev libssl-dev iproute2 \
+        sudo curl gcc libffi-dev libssl-dev iproute2 systemd \
         python3 python3-pip python3-dev python3-yaml python3-apt \
         $(apt-cache search --names-only '^openjdk-(8|11)-jre$' | \
             awk '{ print $1 }') \
