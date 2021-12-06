@@ -1,0 +1,49 @@
+---
+name: CI | Build all images
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git | Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # for HEAD^1
+
+      # NOTE: Docker Hub Free plan no longer includes automated builds for
+      # public images.
+      # - name: Docker Hub | Trigger automated builds
+      #   run: bash ${GITHUB_WORKSPACE}/.github/scripts/docker_hub_sync.sh
+      #   with:
+      #     DOCKER_HUB_LOGIN: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+      #     DOCKER_HUB_PASS: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: OCI | Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: macunha1
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: OCI | Build images
+        run: |
+          source ${GITHUB_WORKSPACE}/.github/scripts/common.sh
+
+          CONTAINER_IMAGE_REPOSITORY=docker.io/macunha1/ansible
+
+          for dockerfile in $(get_changed_dockerfiles); do
+            CONTAINER_IMAGE_TAG=$(echo $dockerfile | \
+              awk -F'/' '{ printf "%s-%s-%s", $3, $2, $4 }')
+
+            docker build . \
+              -t ${CONTAINER_IMAGE_REPOSITORY}:${CONTAINER_IMAGE_TAG} \
+              -f $dockerfile
+
+            docker push ${CONTAINER_IMAGE_REPOSITORY}:${CONTAINER_IMAGE_TAG}
+          done

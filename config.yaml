@@ -5,15 +5,14 @@ ansible:
 defaults:
   alpine: &alpineDefaults
     versions:
-      - 3.11.5
       - 3.10.4
+      - 3.11.5
     java:
       enabled: false
     python3:
       enabled: true
   debian: &debianDefaults
     versions:
-      - 8
       - 9
       - 10
     java:
@@ -22,8 +21,8 @@ defaults:
       enabled: true
   ubuntu: &ubuntuDefaults
     versions:
-      - 16.04
       - 18.04
+      - 20.04
     java:
       enabled: false
     python3:
@@ -36,37 +35,26 @@ distros:
       <<: *alpineDefaults
     java:
       template: alpine
+      <<: *alpineDefaults
       java:
         enabled: true
-      <<: *alpineDefaults
 
   debian:
     py3:
       template: debian
       <<: *debianDefaults
-      versions:
-        - 9
-        - 10
     java:
       template: debian
+      <<: *debianDefaults
       java:
         enabled: true
-      <<: *debianDefaults
 
   ubuntu:
     py3:
       template: debian
       <<: *ubuntuDefaults
-      versions:
-        - 16.04
-        - 18.04
-        - 20.04
     java:
       template: debian
       <<: *ubuntuDefaults
       java:
         enabled: true
-      versions:
-        - 16.04
-        - 18.04
-        - 20.04
