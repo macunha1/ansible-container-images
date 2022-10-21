@@ -1,4 +1,4 @@
-FROM "alpine:3.10.4"
+FROM "alpine:3.15.6"
 
 ARG PYTHON_VERSION=3.10.8
 
@@ -6,7 +6,6 @@ RUN apk --update --no-cache add sudo \
         openssl ca-certificates bash \
         tar curl zlib-dev gzip iproute2 \
         libffi-dev openssl-dev make build-base \
-        openjdk8-jre-base \
         openssh-client rsync sshpass
 
 # Python installation layer

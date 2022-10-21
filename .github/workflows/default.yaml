@@ -1,21 +1,48 @@
 ---
 name: CI | Build all images
 
-on:
+"on":
   push:
-    branches: [master]
+    branches: ["**"]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
+  pre_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pre build | Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # for HEAD^1
+
+      - name: Pre build | Prepare build matrix
+        id: prepare_matrix
+        run: |
+          source ${GITHUB_WORKSPACE}/.github/scripts/common.sh
+
+          DOCKERFILE_MATRIX=$(echo '' | jq -c -n \
+            --arg dockerfiles "$(get_changed_dockerfiles)" \
+            '$dockerfiles | split(" ")')
+
+          echo "::set-output name=dockerfile_matrix::${DOCKERFILE_MATRIX}"
+
+    outputs:
+      dockerfiles: ${{ steps.prepare_matrix.outputs.dockerfile_matrix }}
+
   build:
     runs-on: ubuntu-latest
+    needs: pre_build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfiles: ${{ fromJson(needs.pre_build.outputs.dockerfiles) }}
 
     steps:
       - name: Git | Checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # for HEAD^1
 
       # NOTE: Docker Hub Free plan no longer includes automated builds for
       # public images.
@@ -33,11 +60,12 @@ jobs:
 
       - name: OCI | Build images
         run: |
-          source ${GITHUB_WORKSPACE}/.github/scripts/common.sh
-
           CONTAINER_IMAGE_REPOSITORY=docker.io/macunha1/ansible
+          dockerfile=${{ matrix.dockerfiles }}
 
-          for dockerfile in $(get_changed_dockerfiles); do
+          # Is this Dockerfile a valid file?
+          [[ -f ${dockerfile} ]] && {
+            # YES: Build the container image and push to remote registry
             CONTAINER_IMAGE_TAG=$(echo $dockerfile | \
               awk -F'/' '{ printf "%s-%s-%s", $3, $2, $4 }')
 
@@ -46,4 +74,8 @@ jobs:
               -f $dockerfile
 
             docker push ${CONTAINER_IMAGE_REPOSITORY}:${CONTAINER_IMAGE_TAG}
-          done
+          } || {
+            # NO: Git also shows deleted files in the diff list, however there
+            # is no way of building a deleted file. Just exit
+            exit 0
+          }

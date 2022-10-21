@@ -1,13 +1,17 @@
-FROM "alpine:3.10.4"
+FROM "ubuntu:22.04"
 
 ARG PYTHON_VERSION=3.10.8
 
-RUN apk --update --no-cache add sudo \
-        openssl ca-certificates bash \
-        tar curl zlib-dev gzip iproute2 \
-        libffi-dev openssl-dev make build-base \
-        openjdk8-jre-base \
-        openssh-client rsync sshpass
+RUN apt-get update -y && \
+    apt-get install --fix-missing && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    sudo curl gcc make systemd openssl \
+    libffi-dev zlib1g-dev libssl-dev iproute2 \
+        $(apt-cache search --names-only '^openjdk-(8|11)-jre$' | \
+            awk '{ print $1 }') \
+        sshpass openssh-client && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Python installation layer
 RUN TMPDIR=$(mktemp -d) && \

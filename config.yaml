@@ -1,60 +1,63 @@
 ---
 ansible:
-  version: 2.9.6
+  version: 6.5.0
 
 defaults:
   alpine: &alpineDefaults
     versions:
       - 3.10.4
-      - 3.11.5
+      - 3.15.6
+      - 3.16.2
     java:
       enabled: false
-    python3:
-      enabled: true
+
   debian: &debianDefaults
     versions:
-      - 9
+      # - 9
       - 10
+      - 11
     java:
       enabled: false
-    python3:
-      enabled: true
+
   ubuntu: &ubuntuDefaults
     versions:
-      - 18.04
-      - 20.04
+      # - "18.04"
+      - "20.04"
+      - "22.04"
+      - "22.10"
     java:
       enabled: false
-    python3:
-      enabled: true
 
 distros:
   alpine:
-    py3:
-      template: alpine
+    base:
       <<: *alpineDefaults
+      template: alpine
+
     java:
-      template: alpine
       <<: *alpineDefaults
+      template: alpine
       java:
         enabled: true
 
   debian:
-    py3:
-      template: debian
+    base:
       <<: *debianDefaults
+      template: debian
+
     java:
-      template: debian
       <<: *debianDefaults
+      template: debian
       java:
         enabled: true
 
   ubuntu:
-    py3:
-      template: debian
+    base:
       <<: *ubuntuDefaults
+      template: debian
+
     java:
-      template: debian
       <<: *ubuntuDefaults
+      template: debian
       java:
         enabled: true

@@ -6,7 +6,6 @@ RUN apk --update --no-cache add sudo \
         openssl ca-certificates bash \
         tar curl zlib-dev gzip iproute2 \
         libffi-dev openssl-dev make build-base \
-        openjdk8-jre-base \
         openssh-client rsync sshpass
 
 # Python installation layer

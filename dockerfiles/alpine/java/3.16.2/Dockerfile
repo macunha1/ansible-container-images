@@ -1,4 +1,4 @@
-FROM "alpine:3.10.4"
+FROM "alpine:3.16.2"
 
 ARG PYTHON_VERSION=3.10.8
 

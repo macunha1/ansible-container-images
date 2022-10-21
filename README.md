@@ -32,10 +32,9 @@ By default the following Linux distros are implemented. However, any future
 (version) release of any one of the supported distro can be easily added in the
 [config](config.yaml) to render a new Dockerfile.
 
-- Debian: 8 (jessie), 9 (stretch), 10 (buster);
-- Ubuntu: 14.04, 16.04, 18.04, 20.04. Only LTS versions by default;
-- CentOS 6 and 7;
-- Alpine 3.8, 3.9, 3.10, 3.11
+- Debian: 10 (buster), 11 (bullseye);
+- Ubuntu: 20.04, 22.04, 22.10;
+- Alpine 3.10, 3.15, 3.16;
 
 _Pending:_ OpenSUSE and Fedora.
 

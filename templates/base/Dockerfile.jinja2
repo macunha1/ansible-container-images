@@ -1,23 +1,26 @@
 FROM "{{ distro }}:{{ image_version }}"
 
+ARG PYTHON_VERSION=3.10.8
+
 {% block os_packages -%}{% endblock %}
 
+# Python installation layer
+RUN TMPDIR=$(mktemp -d) && \
+    cd $TMPDIR && \
+    curl -sSLO https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
+    tar -xf Python-${PYTHON_VERSION}.tgz && \
+    cd Python-${PYTHON_VERSION} && \
+    ./configure --enable-optimizations --with-ensurepip=install && \
+    make && make install && \
+    rm -rf ${TMPDIR}
+
 # Python configuration layer
-RUN {% if python3.enabled -%}
-    [ -f "$(dirname $(which python3))/python" ] || \
-    # If there's no python installed on the default path, use python3
-    ln -s $(which python3) $(dirname $(which python3))/python && \
-    ln -s $(which python3) /usr/local/bin/python && \
-    pip3 install -U pip && \
-    command -v pip >/dev/null || \
-    # Same fallback for pip. No pip on default path == use pip3
-    ln -s $(which pip3) $(dirname $(which pip3))/pip && \
-{%- else -%}
-    EASY_INSTALL=$(command -v easy_install || \
-        echo "$(which pip) install") && \
-    $EASY_INSTALL -U pip && \
-{%- endif %}
-    pip install -U setuptools pyopenssl && \
+RUN ln -s -f $(which python3) /usr/bin/python && \
+    ln -s -f $(which python3) /usr/local/bin/python && \
+    ln -s -f $(which pip3) /usr/bin/pip && \
+    ln -s -f $(which pip3) /usr/local/bin/pip && \
+    pip install pyopenssl && \
+    pip install -U pip setuptools && \
     pip install -U --ignore-installed cffi pywinrm && \
     pip install ansible=={{ ansible.version }} && \
     # Adding Ansible hosts for convenience

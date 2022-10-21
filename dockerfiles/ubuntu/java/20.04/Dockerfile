@@ -1,28 +1,37 @@
 FROM "ubuntu:20.04"
 
+ARG PYTHON_VERSION=3.10.8
+
 RUN apt-get update -y && \
     apt-get install --fix-missing && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        sudo curl gcc libffi-dev libssl-dev iproute2 systemd \
-        python3 python3-pip python3-dev python3-yaml python3-apt \
+    sudo curl gcc make systemd openssl \
+    libffi-dev zlib1g-dev libssl-dev iproute2 \
         $(apt-cache search --names-only '^openjdk-(8|11)-jre$' | \
             awk '{ print $1 }') \
         sshpass openssh-client && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
+# Python installation layer
+RUN TMPDIR=$(mktemp -d) && \
+    cd $TMPDIR && \
+    curl -sSLO https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
+    tar -xf Python-${PYTHON_VERSION}.tgz && \
+    cd Python-${PYTHON_VERSION} && \
+    ./configure --enable-optimizations --with-ensurepip=install && \
+    make && make install && \
+    rm -rf ${TMPDIR}
+
 # Python configuration layer
-RUN [ -f "$(dirname $(which python3))/python" ] || \
-    # If there's no python installed on the default path, use python3
-    ln -s $(which python3) $(dirname $(which python3))/python && \
-    ln -s $(which python3) /usr/local/bin/python && \
-    pip3 install -U pip && \
-    command -v pip >/dev/null || \
-    # Same fallback for pip. No pip on default path == use pip3
-    ln -s $(which pip3) $(dirname $(which pip3))/pip && \
-    pip install -U setuptools pyopenssl && \
+RUN ln -s -f $(which python3) /usr/bin/python && \
+    ln -s -f $(which python3) /usr/local/bin/python && \
+    ln -s -f $(which pip3) /usr/bin/pip && \
+    ln -s -f $(which pip3) /usr/local/bin/pip && \
+    pip install pyopenssl && \
+    pip install -U pip setuptools && \
     pip install -U --ignore-installed cffi pywinrm && \
-    pip install ansible==2.9.6 && \
+    pip install ansible==6.5.0 && \
     # Adding Ansible hosts for convenience
     mkdir -p /etc/ansible && \
     echo 'localhost' > /etc/ansible/hosts
