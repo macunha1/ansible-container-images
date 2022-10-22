@@ -1,4 +1,4 @@
-FROM "ubuntu:20.04"
+FROM "docker.io/jrei/systemd-ubuntu:20.04"
 
 ARG PYTHON_VERSION=3.10.8
 

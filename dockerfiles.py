@@ -32,7 +32,7 @@ def main():
                     values={"image_version": distro_version,
                             **variant_values,
                             "ansible": config.get("ansible"),
-                            "distro": distro_name},
+                            "distro_image": variant_values.get("image")},
                     distro_template=variant_values.get("template"),
                 )
 

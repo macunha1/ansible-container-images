@@ -1,4 +1,4 @@
-FROM "alpine:3.15.6"
+FROM "docker.io/library/alpine:3.15.6"
 
 ARG PYTHON_VERSION=3.10.8
 

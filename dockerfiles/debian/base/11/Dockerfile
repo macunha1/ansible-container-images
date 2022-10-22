@@ -1,4 +1,4 @@
-FROM "debian:11"
+FROM "docker.io/jrei/systemd-debian:11"
 
 ARG PYTHON_VERSION=3.10.8
 
