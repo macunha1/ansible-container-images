@@ -1,4 +1,4 @@
-FROM "docker.io/jrei/systemd-debian:11"
+FROM "docker.io/library/debian:11"
 
 ARG PYTHON_VERSION=3.10.8
 
@@ -34,4 +34,4 @@ RUN ln -s -f $(which python3) /usr/bin/python && \
     mkdir -p /etc/ansible && \
     echo 'localhost' > /etc/ansible/hosts
 
-ENTRYPOINT [ "ansible-playbook" ]
+ENTRYPOINT ['/lib/systemd/systemd']

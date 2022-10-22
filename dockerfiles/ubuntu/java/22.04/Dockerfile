@@ -1,4 +1,4 @@
-FROM "docker.io/jrei/systemd-ubuntu:22.04"
+FROM "docker.io/library/ubuntu:22.04"
 
 ARG PYTHON_VERSION=3.10.8
 
@@ -36,4 +36,4 @@ RUN ln -s -f $(which python3) /usr/bin/python && \
     mkdir -p /etc/ansible && \
     echo 'localhost' > /etc/ansible/hosts
 
-ENTRYPOINT [ "ansible-playbook" ]
+ENTRYPOINT ['/lib/systemd/systemd']

@@ -31,4 +31,4 @@ RUN ln -s -f $(which python3) /usr/bin/python && \
     mkdir -p /etc/ansible && \
     echo 'localhost' > /etc/ansible/hosts
 
-ENTRYPOINT [ "ansible-playbook" ]
+ENTRYPOINT ['/usr/sbin/init']

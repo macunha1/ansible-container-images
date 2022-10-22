@@ -5,6 +5,8 @@ ansible:
 defaults:
   alpine: &alpineDefaults
     image: docker.io/library/alpine
+    entrypoint:
+      - /usr/sbin/init
     versions:
       - 3.10.4
       - 3.15.6
@@ -13,18 +15,21 @@ defaults:
       enabled: false
 
   debian: &debianDefaults
-    image: docker.io/jrei/systemd-debian
+    image: docker.io/library/debian
+    entrypoint:
+      - /lib/systemd/systemd
     versions:
-      # - 9
+      - 9
       - 10
       - 11
     java:
       enabled: false
 
   ubuntu: &ubuntuDefaults
-    image: docker.io/jrei/systemd-ubuntu
+    image: docker.io/library/ubuntu
+    entrypoint:
+      - /lib/systemd/systemd
     versions:
-      # - "18.04"
       - "20.04"
       - "22.04"
       - "22.10"

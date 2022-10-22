@@ -1,13 +1,15 @@
-FROM "alpine:3.14.8"
+FROM "docker.io/library/debian:9"
 
 ARG PYTHON_VERSION=3.10.8
 
-RUN apk --update --no-cache add sudo \
-        openssl ca-certificates bash \
-        tar curl zlib-dev gzip iproute2 \
-        libffi-dev openssl-dev make build-base \
-        openjdk8-jre-base \
-        openssh-client rsync sshpass
+RUN apt-get update -y && \
+    apt-get install --fix-missing && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    sudo curl gcc make systemd openssl \
+    libffi-dev zlib1g-dev libssl-dev iproute2 \
+        sshpass openssh-client && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Python installation layer
 RUN TMPDIR=$(mktemp -d) && \
@@ -32,4 +34,4 @@ RUN ln -s -f $(which python3) /usr/bin/python && \
     mkdir -p /etc/ansible && \
     echo 'localhost' > /etc/ansible/hosts
 
-ENTRYPOINT [ "ansible-playbook" ]
+ENTRYPOINT ['/lib/systemd/systemd']
